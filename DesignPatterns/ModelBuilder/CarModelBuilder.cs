@@ -3,6 +3,7 @@ using System;
 
 namespace DesignPatterns.ModelBuilder
 {
+    // Builder para construir objetos Car de forma flexible y escalable
     public class CarModelBuilder
     {
         private string color = "red";

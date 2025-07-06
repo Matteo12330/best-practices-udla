@@ -19,6 +19,9 @@ namespace DesignPatterns.Models
         public string Model { get; set; }
         public double Gas { get; set; }
         public double FuelLimit { get; set; }
+        public string Id { get; set; }
+        public double Gallons { get; set; }
+        public string Status { get; set; }
 
         #endregion
 
