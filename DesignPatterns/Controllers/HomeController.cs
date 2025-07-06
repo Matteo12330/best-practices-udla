@@ -1,4 +1,6 @@
-﻿using DesignPatterns.Models;
+﻿using DesignPatterns.Factories;
+using DesignPatterns.ModelBuilder;
+using DesignPatterns.Models;
 using DesignPatterns.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,6 +24,21 @@ namespace DesignPatterns.Controllers
             _logger = logger;
         }
 
+        private CarFactory chooseFactory(string vehicle)
+        {
+            switch(vehicle)
+            {
+                case "Mustang":
+                    return new FordMustangFactory();
+                case "Explorer":
+                    return new FordExplorerFactory();
+                case "Escape":
+                    return new FordEscapeFactory();
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         public IActionResult Index()
         {
             var model = new HomeViewModel();
@@ -33,16 +50,34 @@ namespace DesignPatterns.Controllers
         }
 
         [HttpGet]
+        /*public IActionResult AddMustang()
+        {
+            var builder = new CarModelBuilder();
+            var newCar = builder.setModel("Mustang")
+                   .setColor("White")
+                   .setBrand("Ford")
+                   .Build();        
+            var builder2 = new CarModelBuilder();
+            if (true)
+            {
+                builder2 = builder2.setModel("Mustang");
+            }
+            var car2 = builder2.Build();
+            _vehicleRepository.AddVehicle(newCar);
+            return Redirect("/");
+        }*/
         public IActionResult AddMustang()
         {
-            _vehicleRepository.AddVehicle(new Car("red","Ford","Mustang"));
+            var carFactory = chooseFactory("Mustang");
+            _vehicleRepository.AddVehicle(carFactory.Create());
             return Redirect("/");
         }
 
         [HttpGet]
         public IActionResult AddExplorer()
         {
-            _vehicleRepository.AddVehicle(new Car("red", "Ford", "Explorer"));
+            var carFactory = chooseFactory("Explorer");
+            _vehicleRepository.AddVehicle(carFactory.Create());
             return Redirect("/");
         }
 
