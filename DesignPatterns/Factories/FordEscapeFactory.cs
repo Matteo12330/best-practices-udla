@@ -8,8 +8,9 @@ namespace DesignPatterns.Factories
         public override Vehicle Create()
         {
             return new CarModelBuilder()
-                .setModel("Explorer")
-                .setColor("black")
+                .setBrand("Ford")
+                .setModel("Escape")
+                .setColor("Red")
                 .Build();
         }
     }

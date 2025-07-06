@@ -15,10 +15,9 @@ namespace DesignPatterns.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
         private readonly IVehicleRepository _vehicleRepository;
 
-        public HomeController(IVehicleRepository vehicleRepository,ILogger<HomeController> logger)
+        public HomeController(IVehicleRepository vehicleRepository, ILogger<HomeController> logger)
         {
             _vehicleRepository = vehicleRepository;
             _logger = logger;
@@ -26,7 +25,7 @@ namespace DesignPatterns.Controllers
 
         private CarFactory chooseFactory(string vehicle)
         {
-            switch(vehicle)
+            switch (vehicle)
             {
                 case "Mustang":
                     return new FordMustangFactory();
@@ -45,27 +44,10 @@ namespace DesignPatterns.Controllers
             model.Vehicles = _vehicleRepository.GetVehicles();
             string error = Request.Query.ContainsKey("error") ? Request.Query["error"].ToString() : null;
             ViewBag.ErrorMessage = error;
-
             return View(model);
         }
 
         [HttpGet]
-        /*public IActionResult AddMustang()
-        {
-            var builder = new CarModelBuilder();
-            var newCar = builder.setModel("Mustang")
-                   .setColor("White")
-                   .setBrand("Ford")
-                   .Build();        
-            var builder2 = new CarModelBuilder();
-            if (true)
-            {
-                builder2 = builder2.setModel("Mustang");
-            }
-            var car2 = builder2.Build();
-            _vehicleRepository.AddVehicle(newCar);
-            return Redirect("/");
-        }*/
         public IActionResult AddMustang()
         {
             var carFactory = chooseFactory("Mustang");
@@ -82,6 +64,14 @@ namespace DesignPatterns.Controllers
         }
 
         [HttpGet]
+        public IActionResult AddEscape()
+        {
+            var carFactory = chooseFactory("Escape");
+            _vehicleRepository.AddVehicle(carFactory.Create());
+            return Redirect("/");
+        }
+
+        [HttpGet]
         public IActionResult StartEngine(string id)
         {
             try
@@ -90,18 +80,16 @@ namespace DesignPatterns.Controllers
                 vehicle.StartEngine();
                 return Redirect("/");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ViewBag.ErrorMessage = ex.Message;
                 return Redirect($"/?error={ex.Message}");
             }
-          
         }
 
         [HttpGet]
         public IActionResult AddGas(string id)
         {
-
             try
             {
                 var vehicle = _vehicleRepository.Find(id);
@@ -124,15 +112,12 @@ namespace DesignPatterns.Controllers
                 vehicle.StopEngine();
                 return Redirect("/");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ViewBag.ErrorMessage = ex.Message;
                 return Redirect($"/?error={ex.Message}");
             }
-           
-           
         }
-
 
         public IActionResult Privacy()
         {
